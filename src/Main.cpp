@@ -17,6 +17,7 @@ int main() {
 	while (!renderer->shouldWindowClose()) {
 
 		renderer->update();
+
 	}
 
 	renderer->destroyWindow();
