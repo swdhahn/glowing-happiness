@@ -13,18 +13,26 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
+#include <cmath>
 
 namespace red {
 
 class Renderer {
 public:
+	const int IN_RANGE = 0;
+	const int OUT_OF_RANGE = 1;
+
 	Renderer(unsigned int width, unsigned int height);
 	~Renderer();
-	int Init();
+	int Init(bool vsync);
 	bool shouldWindowClose();
 	void update();
 	void destroyWindow();
 
+	int drawPixel(const int color, const int &x, const int &y);
+	int drawRectangle(const int &color, const int &x, const int &y, const int &width, const int &height);
+	int fillRectangle(const int &color, const int &x, const int &y, const int &width, const int &height);
+	int drawLine(const int &color, const int &x, const int &y, const int &x2, const int &y2);
 
 
 private:

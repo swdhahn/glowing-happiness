@@ -14,10 +14,16 @@ red::Renderer::Renderer(unsigned int width, unsigned int height) :
 }
 
 red::Renderer::~Renderer() {
+	glDeleteTextures(1, &texture);
+	glDeleteProgram(shaderProgram);
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 
+	delete [] charPixels;
+	delete [] pixels;
 }
 
-int red::Renderer::Init() {
+int red::Renderer::Init(bool vsync) {
 
 	if (glfwInit() == GLFW_FALSE) {
 		std::cout << "GLFW failed initialization!" << std::endl;
@@ -43,6 +49,8 @@ int red::Renderer::Init() {
 		glfwTerminate();
 		return -1;
 	}
+
+	if(!vsync)glfwSwapInterval(0);
 
 	/* not very important -- FROM HERE TO END */
 	// Shader generation
@@ -82,8 +90,6 @@ int red::Renderer::Init() {
 
 	glBindVertexArray(vao);
 
-
-
 	// generating texture
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &texture);
@@ -105,13 +111,6 @@ void red::Renderer::update() {
 
 	glActiveTexture(GL_TEXTURE0);
 
-	for(int y = 0; y < 200; y++) {
-		for(int x = 0; x < 100; x++) {
-
-			pixels[x + y * width] = 0xFFFF66;
-		}
-	}
-
 	int pptr = 0;
 	for(int i = 0; i < width * height; i ++) {
 		charPixels[pptr++] = pixels[i] >> 16;
@@ -130,4 +129,60 @@ void red::Renderer::update() {
 void red::Renderer::destroyWindow() {
 	glfwDestroyWindow(window);
 }
+
+// RENDERING FUNCTIONS
+
+int red::Renderer::drawPixel(const int color, const int &x, const int &y) {
+
+	if(x < 0 || y < 0 || x >= width || y >= height) return OUT_OF_RANGE;
+
+	// Alpha determination
+	int prevColor = pixels[x + y * width];
+	float alpha = (float)(color >> 24) / 255.0;
+
+	int r = ((color & 0x00FF0000) >> 16) * alpha + ((prevColor & 0x00FF0000) >> 16) * (1-alpha);
+	int g = ((color & 0x0000FF00) >> 8) * alpha + ((prevColor & 0x0000FF00) >> 8) * (1-alpha);
+	int b = (color & 0x000000FF) * alpha + (prevColor & 0x000000FF) * (1-alpha);
+
+	pixels[x + y * width] = (r << 16) + (g << 8) + b;
+
+	return IN_RANGE;
+}
+
+int red::Renderer::fillRectangle(const int &color, const int &x, const int &y, const int &width, const int &height) {
+
+	for(int i = 0; i < width * height; i++) {
+		drawPixel(color, x + i%width, y + (i - i%width) / width + 1);
+	}
+
+	return IN_RANGE;
+}
+
+int red::Renderer::drawRectangle(const int &color, const int &x, const int &y, const int &width, const int &height) {
+
+	for(int i = 0; i < width; i++) {
+		drawPixel(color, x + i, y);
+		drawPixel(color, x + i, y + height);
+	}
+	for(int j = 0; j < height; j++) {
+		drawPixel(color, x, y + j);
+		drawPixel(color, x + width, y + j);
+	}
+
+	return IN_RANGE;
+}
+
+int red::Renderer::drawLine(const int &color, const int &x, const int &y, const int &x2, const int &y2) {
+
+	float slope = (float)(y-y2)/(float)(x-x2);
+	int distance = sqrt((x2-x) * (x2-x) + (y2-y)*(y2-y));
+
+	for(int i = 0; i < distance; i++) {
+		drawPixel(color, x + i, y + i * slope);
+	}
+
+	return IN_RANGE;
+}
+
+
 
