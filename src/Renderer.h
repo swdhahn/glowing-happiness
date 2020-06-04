@@ -22,7 +22,7 @@ public:
 	const int IN_RANGE = 0;
 	const int OUT_OF_RANGE = 1;
 
-	Renderer(unsigned int width, unsigned int height);
+	Renderer(int width, int height);
 	~Renderer();
 	int Init(bool vsync);
 	bool shouldWindowClose();
@@ -33,6 +33,7 @@ public:
 	int drawRectangle(const int &color, const int &x, const int &y, const int &width, const int &height);
 	int fillRectangle(const int &color, const int &x, const int &y, const int &width, const int &height);
 	int drawLine(const int &color, const int &x, const int &y, const int &x2, const int &y2);
+	int drawTriangle(const int &color, const Vector2 &p1, const Vector2 &p2, const Vector2 &p3);
 
 
 private:

@@ -33,7 +33,7 @@ public:
 	Vector3(float x, float y, float z);
 	Vector3();
 
-	void normalize(Vector3 &v);
+	void normalize();
 	float dot(const Vector3 &v);
 	Vector3 cross(const Vector3 &v);
 
@@ -63,12 +63,60 @@ public:
 
 class Matrix3 {
 public:
-	//Columns then rows
-	float m[][] = new float[3][3];
+	//Rows then columns; y then x
+	float **m = nullptr;
+	Matrix3();
+	Matrix3(float *mat[3]);
+	~Matrix3();
 
-	Vector4 operator * (const Vector4 &v);
+	void setIdentity();
+	void clearMatrix();
+
+	Vector3 operator * (const Vector3 &v);
+	Matrix3 operator * (const Matrix3 &v);
+
 };
 
+class Quaternion;
+
+class Matrix4 {
+public:
+	//Rows then columns; y then x
+	float **m = nullptr;
+	Matrix4();
+	Matrix4(float *mat[4]);
+	~Matrix4();
+
+	void setIdentity();
+	void clearMatrix();
+	void toProjectionMatrix(float width, float height, float FOV, float zFar, float zNear);
+	void toTransformationMatrix(const Vector3 &position, Quaternion &quat, const float &scale);
+	void toTransformationMatrix(const Vector3 &position, Quaternion &quat, const Vector3 &scale);
+	void translate(const Vector3 &v);
+	void setTranslation(const Vector3 &v);
+	void scale(const Vector3 &v);
+	void scale(const float &v);
+	void rotate(Quaternion &v);
+
+	Vector4 operator * (const Vector4 &v);
+	Matrix4 operator * (const Matrix4 &v);
+
+};
+
+class Quaternion {
+public:
+	float x, y, z, w;
+
+	Quaternion();
+	Quaternion(float x, float y, float z, float w);
+	Quaternion(const Vector3 &axis, float rot);
+
+	void createMatrix4(Matrix4 &matrix);
+	void createMatrix3(Matrix3 &matrix);
+	void fromAxis(const Vector3 &v, float angle);
+
+	Quaternion operator*(const Quaternion &v);
+};
 
 
 }
