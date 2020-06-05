@@ -6,47 +6,55 @@
  */
 
 #include "Renderer.h"
+#include "ShaderProgram.h"
 #include <chrono>
 
 __int64 getTime();
 
 red::Renderer *renderer;
 
-void toScreen(red::Vector4 v, red::Vector2 &screenCoord) {
-
-	screenCoord.x = (1 + v.x / v.w) / 2 * 640;
-	screenCoord.y = (1 + v.y / v.w) / 2 * 360;
-	std::cout << screenCoord.x << "  " << screenCoord.y << std::endl;
-}
-
 int main() {
 
-	red::Vector4 vertices[] = { red::Vector4(-0.5, -0.5, -10, 1), red::Vector4(-0.5, 0.5, -10, 1), red::Vector4(0.5, 0.5, -10, 1) };
+	red::Vector4 vertices[] = {
+	//+z
+			red::Vector4(-0.5, -0.5, 0.5, 1), red::Vector4(0.5, -0.5, 0.5, 1), red::Vector4(-0.5, 0.5, 0.5, 1), red::Vector4(0.5, -0.5, 0.5, 1), red::Vector4(0.5, 0.5, 0.5, 1), red::Vector4(-0.5, 0.5, 0.5, 1),
+			//-z
+			red::Vector4(-0.5, -0.5, -0.5, 1), red::Vector4(0.5, -0.5, -0.5, 1), red::Vector4(-0.5, 0.5, -0.5, 1), red::Vector4(0.5, -0.5, -0.5, 1), red::Vector4(0.5, 0.5, -0.5, 1), red::Vector4(-0.5, 0.5, -0.5, 1),
+			//top
+			red::Vector4(0.5, 0.5, -0.5, 1), red::Vector4(0.5, 0.5, 0.5, 1), red::Vector4(-0.5, 0.5, 0.5, 1), red::Vector4(0.5, 0.5, -0.5, 1), red::Vector4(0.5, 0.5, 0.5, 1), red::Vector4(-0.5, 0.5, 0.5, 1),
+			//bottom
+			red::Vector4(0.5, -0.5, -0.5, 1), red::Vector4(0.5, -0.5, 0.5, 1), red::Vector4(-0.5, -0.5, 0.5, 1), red::Vector4(0.5, -0.5, -0.5, 1), red::Vector4(0.5, -0.5, 0.5, 1), red::Vector4(-0.5, -0.5, 0.5, 1),
+			//-x
+			red::Vector4(-0.5, -0.5, -0.5, 1), red::Vector4(-0.5, -0.5, 0.5, 1), red::Vector4(-0.5, 0.5, -0.5, 1), red::Vector4(-0.5, -0.5, 0.5, 1), red::Vector4(-0.5, 0.5, 0.5, 1), red::Vector4(-0.5, 0.5, -0.5, 1),
+			//+x
+			red::Vector4(0.5, -0.5, -0.5, 1), red::Vector4(0.5, -0.5, 0.5, 1), red::Vector4(0.5, 0.5, -0.5, 1), red::Vector4(0.5, -0.5, 0.5, 1), red::Vector4(0.5, 0.5, 0.5, 1), red::Vector4(0.5, 0.5, -0.5, 1) };
 
-	renderer = new red::Renderer(640, 360);
+	renderer = new red::Renderer(1280, 720);
 	renderer->Init(false);
+	red::ShaderProgram shader(renderer);
 
-	int xxx = 0;
+	int xxx = 1;
 
 	red::Matrix4 projectionMatrix;
-	projectionMatrix.toProjectionMatrix(640, 360, 70, 1000, 0.5);
-
-	red::Vector2 v1(0, 0);
-	red::Vector2 v2(0, 0);
-	red::Vector2 v3(0, 0);
-	toScreen(projectionMatrix * vertices[0], v1);
-	toScreen(projectionMatrix * vertices[1], v2);
-	toScreen(projectionMatrix * vertices[2], v3);
+	projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
+	red::Matrix4 camMatrix;
+	red::Quaternion rot;
 
 	int frames = 0;
 	__int64 start = getTime();
 	while (!renderer->shouldWindowClose()) {
 
-		for (int i = 0; i < 100; i++) {
-			renderer->drawTriangle(0xFFFF00FF, v1, v2, v3);
-		}
+		rot.fromAxis(red::Vector3(0, 1, 0), xxx / 100.0);
+		camMatrix.toTransformationMatrix(red::Vector3(0, 0, -10 - xxx), rot, 0.2);
+
+		shader.drawTriangles(0xFFFF00FF, projectionMatrix, camMatrix, vertices, 12);
 
 		renderer->update();
+
+		if (renderer->windowResized) {
+			projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
+			renderer->windowResized = false;
+		}
 		xxx++;
 
 		frames++;

@@ -11,16 +11,18 @@
 #include "Maths.h"
 #include "Renderer.h"
 
-namespace {
+namespace red {
 class ShaderProgram {
 public:
 	ShaderProgram(red::Renderer *renderer);
 	~ShaderProgram();
-	void drawTriangles(const int &color, const red::Matrix4 &proj, const red::Matrix4 &cam, const red::Vector2 *triangles, const int &count);
+	void drawTriangles(const int &color, const red::Matrix4 &proj, const red::Matrix4 &cam, const red::Vector4 *triangles, const int &count);
 
 public:
 	red::Renderer *renderer = nullptr;
 
+private:
+	red::Vector2 pointTo2dPlane(red::Vector4 point);
 };
 }
 

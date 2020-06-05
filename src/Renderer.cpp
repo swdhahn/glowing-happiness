@@ -53,6 +53,14 @@ int red::Renderer::Init(bool vsync) {
 	if (!vsync)
 		glfwSwapInterval(0);
 
+	glfwSetWindowUserPointer(window, this);
+
+	auto func = [](GLFWwindow *w, int x, int y) {
+		static_cast<Renderer*>(glfwGetWindowUserPointer(w))->windowCallBack(w, x, y);
+	};
+
+	glfwSetWindowSizeCallback(window, func);
+
 	/* not very important -- FROM HERE TO END */
 	// Shader generation
 	const char *vertexShaderSource = "#version 330 core\nlayout (location = 0) in vec3 aPos;\nout vec2 texCoords;\nvoid main()\n{\ngl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\ntexCoords = (aPos.xy + 1) * 0.5;\n}\0";
@@ -107,6 +115,14 @@ bool red::Renderer::shouldWindowClose() {
 }
 
 void red::Renderer::update() {
+	if(resetSizes) {
+		charPixels = new unsigned char[width * height * 3];
+		pixels = new int[width * height];
+		this->width = width;
+		this->height = height;
+		resetSizes = false;
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -183,11 +199,11 @@ int red::Renderer::drawTriangle(const int &color, const Vector2 &p1, const Vecto
 
 int red::Renderer::drawLine(const int &color, const int &x, const int &y, const int &x2, const int &y2) {
 	int startY = y, endY = y2;
-	if(y > y2) {
+	if (y > y2) {
 		startY = y2;
 		endY = y;
 	}
-	if((x - x2) == 0) {
+	if ((x - x2) == 0) {
 		for (int yy = startY; yy < endY; yy++) {
 			drawPixel(color, x, yy);
 		}
@@ -196,7 +212,7 @@ int red::Renderer::drawLine(const int &color, const int &x, const int &y, const 
 	float slope = (float) (y - y2) / (float) (x - x2);
 	float yintercept = -slope * x + y;
 	int startX = x, endX = x2;
-	if(x > x2) {
+	if (x > x2) {
 		startX = x2;
 		endX = x;
 	}
@@ -208,5 +224,10 @@ int red::Renderer::drawLine(const int &color, const int &x, const int &y, const 
 	}
 
 	return IN_RANGE;
+}
+
+void red::Renderer::windowCallBack(GLFWwindow* w, int width, int height) {
+	windowResized = true;
+	resetSizes = true;
 }
 

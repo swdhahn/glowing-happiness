@@ -9,6 +9,7 @@
 #define MATHS_H_
 
 #include <cmath>
+#include <iostream>
 
 namespace red {
 
@@ -26,6 +27,10 @@ public:
 	Vector2 operator - (const float &v2);
 	Vector2 operator * (const float &scalar);
 };
+
+#define VECTOR3_X Vector3(1, 0, 0)
+#define VECTOR3_Y Vector3(0, 1, 0)
+#define VECTOR3_Z Vector3(0, 0, 1)
 
 class Vector3 {
 public:
@@ -89,6 +94,7 @@ public:
 
 	void setIdentity();
 	void clearMatrix();
+	void setValues(float**v);
 	void toProjectionMatrix(float width, float height, float FOV, float zFar, float zNear);
 	void toTransformationMatrix(const Vector3 &position, Quaternion &quat, const float &scale);
 	void toTransformationMatrix(const Vector3 &position, Quaternion &quat, const Vector3 &scale);
@@ -96,10 +102,10 @@ public:
 	void setTranslation(const Vector3 &v);
 	void scale(const Vector3 &v);
 	void scale(const float &v);
-	void rotate(Quaternion &v);
+	void rotate(const Quaternion &v);
 
-	Vector4 operator * (const Vector4 &v);
-	Matrix4 operator * (const Matrix4 &v);
+	Vector4 operator * (const Vector4 &v) const;
+	Matrix4 operator * (const Matrix4 &v) const;
 
 };
 
@@ -111,12 +117,15 @@ public:
 	Quaternion(float x, float y, float z, float w);
 	Quaternion(const Vector3 &axis, float rot);
 
-	void createMatrix4(Matrix4 &matrix);
+	void createMatrix4(Matrix4 &matrix) const;
 	void createMatrix3(Matrix3 &matrix);
 	void fromAxis(const Vector3 &v, float angle);
+	void normalize(Quaternion &v) const;
 
 	Quaternion operator*(const Quaternion &v);
 };
+
+Matrix4 multiplyTwoMatricies(const Matrix4 &m1, const Matrix4 &m2);
 
 
 }

@@ -13,6 +13,7 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
+#include <functional>
 #include "Maths.h"
 
 namespace red {
@@ -21,6 +22,7 @@ class Renderer {
 public:
 	const int IN_RANGE = 0;
 	const int OUT_OF_RANGE = 1;
+	bool windowResized = false;
 
 	Renderer(int width, int height);
 	~Renderer();
@@ -34,8 +36,8 @@ public:
 	int fillRectangle(const int &color, const int &x, const int &y, const int &width, const int &height);
 	int drawLine(const int &color, const int &x, const int &y, const int &x2, const int &y2);
 	int drawTriangle(const int &color, const Vector2 &p1, const Vector2 &p2, const Vector2 &p3);
-
-
+	int getWidth() {return width;}
+	int getHeight() {return height;}
 private:
 	GLFWwindow *window = nullptr;
 	GLuint shaderProgram = -1;
@@ -47,6 +49,9 @@ private:
 	int *pixels = nullptr;
 	int width = -1;
 	int height = -1;
+	bool resetSizes = false;
+
+	void windowCallBack(GLFWwindow*, int width, int height);
 };
 
 }
