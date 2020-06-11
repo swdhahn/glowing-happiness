@@ -268,12 +268,10 @@ void red::Matrix4::scale(const float &v) {
 void red::Matrix4::toTransformationMatrix(const red::Vector3 &position, red::Quaternion &quat, const float &s) {
 	setIdentity();
 
-	red::Quaternion v1;
-	quat.normalize(v1);
-	v1.createMatrix4(*this);
-
-	translate(position);
+	rotate(quat);
 	scale(s);
+	translate(position);
+
 
 }
 

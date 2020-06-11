@@ -46,7 +46,7 @@ int main() {
 	while (!renderer->shouldWindowClose()) {
 
 		rot.fromAxis(red::Vector3(0, 1, 0), xxx / 100.0);
-		camMatrix.toTransformationMatrix(red::Vector3(0, 0, -10 - xxx), rot, 0.2);
+		camMatrix.toTransformationMatrix(red::Vector3(0, 0, -10 - xxx), rot, 0.025);
 
 		shader.drawTriangles(0xFFFF00FF, projectionMatrix, camMatrix, vertices, 12);
 
