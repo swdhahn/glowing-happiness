@@ -218,17 +218,9 @@ red::Matrix4::~Matrix4() {
 }
 
 void red::Matrix4::translate(const red::Vector3 &v) {
-	m[3][0] = m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z;
-	m[3][1] = m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z;
-	m[3][2] = m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z;
-	m[3][3] = m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z;
-}
-
-void red::Matrix4::setTranslation(const red::Vector3 &v) {
-	m[3][0] = m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z;
-	m[3][1] = m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z;
-	m[3][2] = m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z;
-	m[3][3] = m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z;
+	m[0][3] += v.x;
+	m[1][3] += v.y;
+	m[2][3] += v.z;
 }
 
 void red::Matrix4::scale(const red::Vector3 &v) {
@@ -265,6 +257,15 @@ void red::Matrix4::scale(const float &v) {
 	m[2][3] = m[2][3] * v;
 }
 
+void red::Matrix4::toTransformationMatrix(const Vector3 &position, const Vector3 &rotation, const float &s) {
+	setIdentity();
+
+	rotate(rotation);
+	scale(s);
+	translate(position);
+
+}
+
 void red::Matrix4::toTransformationMatrix(const red::Vector3 &position, red::Quaternion &quat, const float &s) {
 	setIdentity();
 
@@ -272,19 +273,61 @@ void red::Matrix4::toTransformationMatrix(const red::Vector3 &position, red::Qua
 	scale(s);
 	translate(position);
 
-
 }
-
-
-
-
 
 void red::Matrix4::toTransformationMatrix(const red::Vector3 &position, red::Quaternion &quat, const red::Vector3 &s) {
 	setIdentity();
-	rotate(quat);
-	translate(position);
-	scale(s);
 
+	rotate(quat);
+	scale(s);
+	translate(position);
+
+}
+
+void red::Matrix4::rotate(const Vector3 &axis, const float &angle) {
+	float x = axis.x * angle;
+	float y = axis.y * angle;
+	float z = axis.z * angle;
+
+	Matrix4 rotm;
+	rotm.m[0][0] = cos(y) * cos(z);
+	rotm.m[0][1] = -cos(y) * sin(z);
+	rotm.m[0][2] = sin(y);
+
+	rotm.m[1][0] = sin(x) * sin(y) * cos(z) + cos(x) * sin(z);
+	rotm.m[1][1] = -sin(x) * sin(y) * sin(z) + cos(x) * cos(z);
+	rotm.m[1][2] = -sin(x) * cos(y);
+
+	rotm.m[2][0] = -cos(x) * sin(y) * cos(z) + sin(x) * sin(z);
+	rotm.m[2][1] = cos(x) * sin(y) * sin(z) + sin(x) * cos(z);
+	rotm.m[2][2] = cos(x) * cos(y);
+	rotm.m[3][3] = 1;
+
+	Matrix4 mat(multiplyTwoMatricies(rotm, *this));
+	setValues(mat.m);
+}
+
+void red::Matrix4::rotate(const Vector3 &rotation) {
+	float x = rotation.x;
+	float y = rotation.y;
+	float z = rotation.z;
+
+	Matrix4 rotm;
+	rotm.m[0][0] = cos(y) * cos(z);
+	rotm.m[0][1] = -cos(y) * sin(z);
+	rotm.m[0][2] = sin(y);
+
+	rotm.m[1][0] = sin(x) * sin(y) * cos(z) + cos(x) * sin(z);
+	rotm.m[1][1] = -sin(x) * sin(y) * sin(z) + cos(x) * cos(z);
+	rotm.m[1][2] = -sin(x) * cos(y);
+
+	rotm.m[2][0] = -cos(x) * sin(y) * cos(z) + sin(x) * sin(z);
+	rotm.m[2][1] = cos(x) * sin(y) * sin(z) + sin(x) * cos(z);
+	rotm.m[2][2] = cos(x) * cos(y);
+	rotm.m[3][3] = 1;
+
+	Matrix4 mat(multiplyTwoMatricies(rotm, *this));
+	setValues(mat.m);
 }
 
 void red::Matrix4::setIdentity() {
@@ -304,8 +347,8 @@ void red::Matrix4::clearMatrix() {
 	}
 }
 
-void red::Matrix4::setValues(float**v) {
-	for(int i = 0; i < 4; i++) {
+void red::Matrix4::setValues(float **v) {
+	for (int i = 0; i < 4; i++) {
 		m[i][0] = v[i][0];
 		m[i][1] = v[i][1];
 		m[i][2] = v[i][2];
@@ -351,7 +394,6 @@ red::Matrix4 red::multiplyTwoMatricies(const red::Matrix4 &m1, const red::Matrix
 	return red::Matrix4(m1 * m2);
 }
 
-
 void red::Matrix4::rotate(const red::Quaternion &v) {
 	red::Matrix4 quat;
 
@@ -374,14 +416,17 @@ void red::Matrix4::toProjectionMatrix(float width, float height, float FOV, floa
 
 // QUATERNION ##########################################################################
 
-red::Quaternion::Quaternion() : x(0), y(0), z(0), w(1) {
+red::Quaternion::Quaternion() :
+		x(0), y(0), z(0), w(1) {
 
 }
-red::Quaternion::Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {
+red::Quaternion::Quaternion(float x, float y, float z, float w) :
+		x(x), y(y), z(z), w(w) {
 
 }
 
-red::Quaternion::Quaternion(const red::Vector3 &axis, float rot) : x(0), y(0), z(0), w(1) {
+red::Quaternion::Quaternion(const red::Vector3 &axis, float rot) :
+		x(0), y(0), z(0), w(1) {
 	fromAxis(axis, rot);
 }
 
@@ -446,9 +491,6 @@ void red::Quaternion::createMatrix3(red::Matrix3 &matrix) {
 }
 
 red::Quaternion red::Quaternion::operator*(const red::Quaternion &v) {
-	return Quaternion(x * v.w + w * v.x + y * v.z - z * v.y,
-			y * v.w + w * v.y + z * v.x - x * v.z,
-			z * v.w + w * v.z + x * v.y - y * v.x,
-			w * v.w - x * v.x - y * v.y - z * v.z);
+	return Quaternion(x * v.w + w * v.x + y * v.z - z * v.y, y * v.w + w * v.y + z * v.x - x * v.z, z * v.w + w * v.z + x * v.y - y * v.x, w * v.w - x * v.x - y * v.y - z * v.z);
 }
 

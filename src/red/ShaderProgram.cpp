@@ -15,11 +15,11 @@ red::ShaderProgram::~ShaderProgram() {
 
 }
 
-void red::ShaderProgram::drawTriangles(const int &color, const red::Matrix4 &proj, const red::Matrix4 &cam, const red::Vector4 *triangles, const int &count) {
+void red::ShaderProgram::drawTriangles(const int &color, const red::Matrix4 &proj, const red::Matrix4 &cam, const red::Matrix4 &model, const red::Vector4 *triangles, const int &count) {
 	for(int i = 0; i < count; i ++) {
-		red::Vector4 v1 = proj * cam * triangles[i * 3];
-		red::Vector4 v2 = proj * cam * triangles[i * 3 + 1];
-		red::Vector4 v3 = proj * cam * triangles[i * 3 + 2];
+		red::Vector4 v1 = proj * cam * model * triangles[i * 3];
+		red::Vector4 v2 = proj * cam * model * triangles[i * 3 + 1];
+		red::Vector4 v3 = proj * cam * model * triangles[i * 3 + 2];
 		renderer->drawTriangle(color, pointTo2dPlane(v1), pointTo2dPlane(v2), pointTo2dPlane(v3));
 	}
 }

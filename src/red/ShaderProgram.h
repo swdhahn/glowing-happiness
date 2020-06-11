@@ -16,7 +16,7 @@ class ShaderProgram {
 public:
 	ShaderProgram(red::Renderer *renderer);
 	~ShaderProgram();
-	void drawTriangles(const int &color, const red::Matrix4 &proj, const red::Matrix4 &cam, const red::Vector4 *triangles, const int &count);
+	void drawTriangles(const int &color, const red::Matrix4 &proj, const red::Matrix4 &cam, const red::Matrix4 &model, const red::Vector4 *triangles, const int &count);
 
 public:
 	red::Renderer *renderer = nullptr;

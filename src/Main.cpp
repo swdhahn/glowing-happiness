@@ -5,8 +5,8 @@
  *      Author: Count
  */
 
-#include "Renderer.h"
-#include "ShaderProgram.h"
+#include "red/Renderer.h"
+#include "red/ShaderProgram.h"
 #include <inttypes.h>
 #include <chrono>
 
@@ -38,7 +38,7 @@ int main() {
 
 	red::Matrix4 projectionMatrix;
 	projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
-	red::Matrix4 camMatrix;
+	red::Matrix4 camMatrix, modelMatrix;
 	red::Quaternion rot;
 
 	int frames = 0;
@@ -46,9 +46,9 @@ int main() {
 	while (!renderer->shouldWindowClose()) {
 
 		rot.fromAxis(red::Vector3(0, 1, 0), xxx / 100.0);
-		camMatrix.toTransformationMatrix(red::Vector3(0, 0, -10 - xxx), rot, 0.025);
+		camMatrix.toTransformationMatrix(red::Vector3(0, 0, -5), rot, 1);
 
-		shader.drawTriangles(0xFFFF00FF, projectionMatrix, camMatrix, vertices, 12);
+		shader.drawTriangles(0xFFFF00FF, projectionMatrix, camMatrix, modelMatrix, vertices, 12);
 
 		renderer->update();
 

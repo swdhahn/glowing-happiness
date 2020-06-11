@@ -96,13 +96,15 @@ public:
 	void clearMatrix();
 	void setValues(float**v);
 	void toProjectionMatrix(float width, float height, float FOV, float zFar, float zNear);
+	void toTransformationMatrix(const Vector3 &position, const Vector3 &rotation, const float &scale);
 	void toTransformationMatrix(const Vector3 &position, Quaternion &quat, const float &scale);
 	void toTransformationMatrix(const Vector3 &position, Quaternion &quat, const Vector3 &scale);
 	void translate(const Vector3 &v);
-	void setTranslation(const Vector3 &v);
 	void scale(const Vector3 &v);
 	void scale(const float &v);
 	void rotate(const Quaternion &v);
+	void rotate(const Vector3 &axis, const float &angle);
+	void rotate(const Vector3 & rotation);
 
 	Vector4 operator * (const Vector4 &v) const;
 	Matrix4 operator * (const Matrix4 &v) const;
