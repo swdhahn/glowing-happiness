@@ -7,9 +7,10 @@
 
 #include "Renderer.h"
 #include "ShaderProgram.h"
+#include <inttypes.h>
 #include <chrono>
 
-__int64 getTime();
+int64_t getTime();
 
 red::Renderer *renderer;
 
@@ -41,7 +42,7 @@ int main() {
 	red::Quaternion rot;
 
 	int frames = 0;
-	__int64 start = getTime();
+	auto start = getTime();
 	while (!renderer->shouldWindowClose()) {
 
 		rot.fromAxis(red::Vector3(0, 1, 0), xxx / 100.0);
@@ -72,7 +73,7 @@ int main() {
 	return 1;
 }
 
-__int64 getTime() {
+int64_t getTime() {
 	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
