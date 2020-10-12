@@ -148,7 +148,6 @@ void red::Renderer::destroyWindow() {
 // RENDERING FUNCTIONS
 
 int red::Renderer::drawPixel(const int color, const int &x, const int &y) {
-
 	if (x < 0 || y < 0 || x >= width || y >= height)
 		return OUT_OF_RANGE;
 
@@ -189,7 +188,6 @@ int red::Renderer::drawRectangle(const int &color, const int &x, const int &y, c
 }
 
 int red::Renderer::drawTriangle(const int &color, const Vector2 &p1, const Vector2 &p2, const Vector2 &p3) {
-
 	drawLine(color, p1.x, p1.y, p2.x, p2.y);
 	drawLine(color, p2.x, p2.y, p3.x, p3.y);
 	drawLine(color, p3.x, p3.y, p1.x, p1.y);
@@ -199,6 +197,7 @@ int red::Renderer::drawTriangle(const int &color, const Vector2 &p1, const Vecto
 
 int red::Renderer::drawLine(const int &color, const int &x, const int &y, const int &x2, const int &y2) {
 	int startY = y, endY = y2;
+
 	if (y > y2) {
 		startY = y2;
 		endY = y;

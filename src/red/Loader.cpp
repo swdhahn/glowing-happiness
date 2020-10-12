@@ -7,7 +7,7 @@
 
 #include "Loader.h"
 
-red::Model red::loadModel(const char *path) {
+/*red::Model red::loadModel(const char *path) {
 	std::vector<red::Vector3> vertices;
 	std::vector<int> indices;
 
@@ -19,3 +19,4 @@ red::Model red::loadModel(const char *path) {
 
 	return red::Model();
 }
+*/

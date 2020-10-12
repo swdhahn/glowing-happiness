@@ -9,6 +9,7 @@
 #include "red/ShaderProgram.h"
 #include <inttypes.h>
 #include <chrono>
+#include <iostream>
 
 int64_t getTime();
 
@@ -39,16 +40,28 @@ int main() {
 	red::Matrix4 projectionMatrix;
 	projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
 	red::Matrix4 camMatrix, modelMatrix;
-	red::Quaternion rot;
+	red::Quaternion rot, rot2;
 
 	int frames = 0;
 	auto start = getTime();
 	while (!renderer->shouldWindowClose()) {
 
-		rot.fromAxis(red::Vector3(0, 1, 0), xxx / 100.0);
-		camMatrix.toTransformationMatrix(red::Vector3(0, 0, -5), rot, 1);
+		rot2.fromAxis(red::Vector3(1, 0, 0), 3.14);
+		camMatrix.toTransformationMatrix(red::Vector3(0, 5, 0), rot2, 1);
 
-		shader.drawTriangles(0xFFFF00FF, projectionMatrix, camMatrix, modelMatrix, vertices, 12);
+		// render stuffs
+
+		for (int i = -20; i < 20; i++) {
+			for (int j = 1; j < 100; j++) {
+				modelMatrix.toTransformationMatrix(red::Vector3(i, 0, -5 - j), rot, 0.5);
+				shader.drawTriangles(0xFFFFFFFF, projectionMatrix, camMatrix, modelMatrix, vertices, 12);
+			}
+		}
+
+		//modelMatrix.toTransformationMatrix(red::Vector3(i, 0, -j), rot, 0.5);
+		//shader.drawTriangles(0xFFFFFFFF, projectionMatrix, camMatrix, modelMatrix, vertices, 12);
+
+		// end render stuffs
 
 		renderer->update();
 
