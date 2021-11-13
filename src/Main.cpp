@@ -35,8 +35,6 @@ int main() {
 	renderer->Init(false);
 	red::ShaderProgram shader(renderer);
 
-	int xxx = 1;
-
 	red::Matrix4 projectionMatrix;
 	projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
 	red::Matrix4 camMatrix, modelMatrix;
@@ -67,8 +65,6 @@ int main() {
             projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
         }
 		renderer->update();
-
-		xxx++;
 
 		frames++;
 		if (start + 1000 < getTime()) {
