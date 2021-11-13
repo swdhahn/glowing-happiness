@@ -2,7 +2,7 @@
  * Main.cpp
  *
  *  Created on: 20 may. 2020
- *      Author: Count
+ *      Author: Seth H.
  */
 
 #include "red/Renderer.h"

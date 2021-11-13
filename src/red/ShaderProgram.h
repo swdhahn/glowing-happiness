@@ -2,7 +2,7 @@
  * ShaderProgram.h
  *
  *  Created on: 4 jun. 2020
- *      Author: Count
+ *      Author: Seth H.
  */
 
 #ifndef SHADERPROGRAM_H_

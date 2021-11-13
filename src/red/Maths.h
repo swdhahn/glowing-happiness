@@ -2,7 +2,7 @@
  * Maths.h
  *
  *  Created on: 30 may. 2020
- *      Author: Count
+ *      Author: Seth H.
  */
 
 #ifndef MATHS_H_

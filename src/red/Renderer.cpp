@@ -2,7 +2,7 @@
  * Renderer.cpp
  *
  *  Created on: 20 may. 2020
- *      Author: Count
+ *      Author: Seth H.
  */
 
 #include "Renderer.h"
@@ -116,6 +116,8 @@ bool red::Renderer::shouldWindowClose() {
 
 void red::Renderer::update() {
 	if(resetSizes) {
+		delete[] charPixels;
+		delete[] pixels;
 		charPixels = new unsigned char[width * height * 3];
 		pixels = new int[width * height];
 		this->width = width;

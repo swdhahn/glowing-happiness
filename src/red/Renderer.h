@@ -2,14 +2,13 @@
  * Renderer.h
  *
  *  Created on: 20 may. 2020
- *      Author: Count
+ *      Author: Seth H.
  */
 
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
-#define GLFW_DLL
-#define GLEW_DLL
+#define GLFW_STATIC
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include <iostream>

@@ -2,7 +2,7 @@
  * Maths.cpp
  *
  *  Created on: 30 may. 2020
- *      Author: Count
+ *      Author: Seth H.
  */
 
 #include "Maths.h"

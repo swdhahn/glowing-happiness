@@ -2,7 +2,7 @@
  * Model.h
  *
  *  Created on: Jun 11, 2020
- *      Author: countgandi
+ *      Author: Seth H.
  */
 
 #ifndef RED_MODEL_H_

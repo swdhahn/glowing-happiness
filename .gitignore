@@ -1,3 +1,2 @@
-/Release/
-Debug/
-LinuxDebug/
+cmake-build-debug/
+.idea/

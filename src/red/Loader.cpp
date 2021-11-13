@@ -2,7 +2,7 @@
  * Loader.cpp
  *
  *  Created on: Jun 11, 2020
- *      Author: countgandi
+ *      Author: Seth H.
  */
 
 #include "Loader.h"

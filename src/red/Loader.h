@@ -2,7 +2,7 @@
  * Loader.h
  *
  *  Created on: Jun 11, 2020
- *      Author: countgandi
+ *      Author: Seth H.
  */
 
 #ifndef LOADER_H_
