@@ -43,32 +43,31 @@ int main() {
 	red::Quaternion rot, rot2;
 
 	int frames = 0;
+    float yyy = 0;
 	auto start = getTime();
 	while (!renderer->shouldWindowClose()) {
 
-		rot2.fromAxis(red::Vector3(1, 0, 0), 3.14);
-		camMatrix.toTransformationMatrix(red::Vector3(0, 5, 0), rot2, 1);
+		rot2.fromAxis(red::Vector3(1, 0, 0), 3.14 * 1.05);
+		camMatrix.toTransformationMatrix(red::Vector3(0, 6, 0 + 10), rot2, 1);
+        yyy+=0.01;
+        rot.fromAxis(red::Vector3(1, 1, 1), yyy);
 
 		// render stuffs
 
-		for (int i = -20; i < 20; i++) {
-			for (int j = 1; j < 100; j++) {
-				modelMatrix.toTransformationMatrix(red::Vector3(i, 0, -5 - j), rot, 0.5);
+		for (int i = -5; i < 6; i++) {
+			for (int j = 1; j < 10; j++) {
+				modelMatrix.toTransformationMatrix(red::Vector3(i, 4 + j / 2.0, 0 - j), rot, 0.5);
 				shader.drawTriangles(0xFFFFFFFF, projectionMatrix, camMatrix, modelMatrix, vertices, 12);
 			}
 		}
 
-		//modelMatrix.toTransformationMatrix(red::Vector3(i, 0, -j), rot, 0.5);
-		//shader.drawTriangles(0xFFFFFFFF, projectionMatrix, camMatrix, modelMatrix, vertices, 12);
-
 		// end render stuffs
 
+        if (renderer->windowResized) {
+            projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
+        }
 		renderer->update();
 
-		if (renderer->windowResized) {
-			projectionMatrix.toProjectionMatrix(renderer->getWidth(), renderer->getHeight(), 70, 1000, 0.5);
-			renderer->windowResized = false;
-		}
 		xxx++;
 
 		frames++;
