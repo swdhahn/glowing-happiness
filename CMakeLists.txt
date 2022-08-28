@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.19.2)
 
 project(Program)
 
+set(CMAKE_CXX_STANDARD 20)
+
 file(GLOB_RECURSE program_sources CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
 
 add_executable(${PROJECT_NAME} ${program_sources})
